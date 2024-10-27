@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="potato_disease_classification"
+        android:label="Potato Disease Classification"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
