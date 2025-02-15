@@ -60,7 +60,7 @@ samples, guidance on mobile development, and a full API reference.
 
 1. Go to Project Directory
    ```bash
-   cd seedscan
+   cd potato_disease_classification_mobile_app
 2. Install packages and dependencies
    ```bash
    flutter pub get
