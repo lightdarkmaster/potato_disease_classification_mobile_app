@@ -361,6 +361,37 @@ class _HomePageState extends State<CameraWidget> {
                             ],
                           ),
 
+                        // Recommendation for Early Blight
+                        if (labels[resultIndex]
+                            .toLowerCase()
+                            .contains('undefined'))
+                          const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Recommendation:",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "Not A Potato Leaf:\n"
+                                "- Be sure that the image is a potato leaf.\n"
+                                "- Provide a clear image/subject.\n"
+                                "- Undefined.\n"
+                                "- Take another image",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
+
                         // Recommendation for Late Blight
                         if (labels[resultIndex]
                             .toLowerCase()
