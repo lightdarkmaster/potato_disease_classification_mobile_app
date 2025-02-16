@@ -1,10 +1,10 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import url_launcher
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({Key? key}) : super(key: key);
@@ -39,7 +39,6 @@ class _HomePageState extends State<CameraWidget> {
     if (pickedImage != null) {
       _image = File(pickedImage.path);
       imageMatrixF = await convertImageToMatrix(_image!);
-      //print(imageMatrixF.shape);
     } else {
       debugPrint('No image selected.');
     }
@@ -57,7 +56,6 @@ class _HomePageState extends State<CameraWidget> {
     if (capturedImage != null) {
       _image = File(capturedImage.path);
       imageMatrixF = await convertImageToMatrix(_image!);
-      //print(imageMatrixF.shape);
     } else {
       debugPrint('No image captured.');
     }
@@ -100,18 +98,28 @@ class _HomePageState extends State<CameraWidget> {
   Future<Map<String, dynamic>> runInference(
       List<List<List<num>>> imageMatrix) async {
     final input = [imageMatrix];
-    final output = [List<double>.filled(4, 0)]; //culprit
-    //print("shapes:");
-    //print(input.shape);
-    //print(output.shape);
+    final output = [
+      List<double>.filled(4, 0)
+    ]; // Adjust based on your model's output
     interpreter!.run(input, output);
 
     final result = output.first;
     final index = result
         .indexOf(result.reduce((curr, next) => curr > next ? curr : next));
     final confidence = result[index];
-    //print(labels[index]);
     return {'index': index, 'confidence': confidence};
+  }
+
+  // Function to launch URLs
+  Future<void> _launchURL(String url) async {
+    debugPrint('Attempting to launch URL: $url');
+    if (await canLaunch(url)) {
+      await launch(url);
+      debugPrint('URL launched successfully');
+    } else {
+      debugPrint('Could not launch $url');
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -121,48 +129,69 @@ class _HomePageState extends State<CameraWidget> {
         title: const Text('Capture/Upload Potato Leaf'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 200,
-              height: 200,
-              color: Colors.grey,
-              child: _image != null
-                  ? Image.file(
-                      _image!,
-                      fit: BoxFit.cover,
-                    )
-                  : const Center(
-                      child: Text('Your image appears here'),
-                    ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: 350, // Adjust width as needed
-              height: 200, // Adjust height as needed
-              child: Card(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Image Container
+              Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: _image != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.file(
+                          _image!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : const Center(
+                        child: Text(
+                          'Your image appears here',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 20),
+
+              // Buttons Card
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       ElevatedButton.icon(
                         onPressed: _pickImage,
                         icon: const Icon(Icons.image),
                         label: const Text('Pick Image'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton.icon(
                         onPressed: _captureImage,
                         icon: const Icon(Icons.camera_alt),
                         label: const Text('Capture Image'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
                       ),
+                      const SizedBox(height: 10),
                       ElevatedButton.icon(
                         onPressed: () async {
                           if (_image == null) {
-                            debugPrint('No image selected.');
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('No image selected.'),
@@ -189,32 +218,38 @@ class _HomePageState extends State<CameraWidget> {
                           setState(() {});
                         },
                         icon: const Icon(Icons.play_arrow),
-                        label: const Text(
-                            "Run Inference"), // Empty string as label
+                        label: const Text("Run Inference"),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            const SizedBox(height: 10),
-            if (resultIndex != -1)
-              SizedBox(
-                width: 350, // Adjust width as needed
-                height: 150, // Adjust height as needed
-                child: Card(
+              const SizedBox(height: 20),
+
+              // Results Card
+              if (resultIndex != -1)
+                Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(25.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
                           "RESULTS:",
                           style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
                         ),
+                        const SizedBox(height: 10),
                         RichText(
                           text: TextSpan(
                             children: [
@@ -237,6 +272,7 @@ class _HomePageState extends State<CameraWidget> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 10),
                         RichText(
                           text: TextSpan(
                             children: [
@@ -260,12 +296,139 @@ class _HomePageState extends State<CameraWidget> {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 10),
+
+                        // Recommendation for Early Blight
+                        if (labels[resultIndex]
+                            .toLowerCase()
+                            .contains('early blight'))
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Recommendation:",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              const Text(
+                                "Pesticide:\n"
+                                "- Amistar Top pesticide: at a rate of 50 cm³ / 100 liters of water.\n"
+                                "- Pellez pesticide: at a rate of 50 g / 100 liters of water.\n"
+                                "- Score pesticide: at a rate of 50 g / 100 liters of water.\n"
+                                "- Avoid overhead watering to prevent spreading.",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Links:",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => _launchURL(
+                                    'https://www.youtube.com/watch?v=ld9-5D2l3qA&t=31s'),
+                                child: const Text(
+                                  "Watch YouTube Video on Early Blight",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => _launchURL(
+                                    'https://learn.agrogatemasr.com/early-symposium-in-potatoes/'),
+                                child: const Text(
+                                  "Learn More About Early Blight",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        // Recommendation for Late Blight
+                        if (labels[resultIndex]
+                            .toLowerCase()
+                            .contains('late blight'))
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Recommendation:",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              const Text(
+                                "Pesticide:\n"
+                                "-Copper aerobatics:- 46% at a rate of 250 gm/100 liters of water.\n"
+                                "-Amistar:- 25% at a rate of 50 cm/100 liters of water.\n"
+                                "-Rivas:- 25% at a rate of 50 cm/100 liters of water.\n"
+                                "-Belize:- 75 mg/100 liters of water.",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Links:",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => _launchURL(
+                                    'https://www.youtube.com/watch?v=S-svsEU3aco&t=7s'),
+                                child: const Text(
+                                  "Watch YouTube Video on Late Blight",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () => _launchURL(
+                                    'https://learn.agrogatemasr.com/early-symposium-in-potatoes/'),
+                                child: const Text(
+                                  "Learn More About Late Blight",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

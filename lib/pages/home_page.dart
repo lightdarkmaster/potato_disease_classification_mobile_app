@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:potato_disease_classification/pages/about.dart';
 import 'package:potato_disease_classification/pages/homescreen.dart';
 import 'procerdure_page.dart';
 import 'about_dev.dart';
@@ -94,7 +95,7 @@ class _BottomNavBarState extends State<Homepage> {
       case 3:
         return const AnalyticsWidget();
       case 4:
-        return const ChatWidget();
+        return const AboutAppPage();
       default:
         return Container(); // Default page, you can replace it with another widget.
     }
