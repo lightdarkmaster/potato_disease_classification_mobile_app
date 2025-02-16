@@ -19,21 +19,21 @@ class AboutAppPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10), // Rounded corners
             ),
             child: const Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // App Logo or Icon
-                  const SizedBox(height: 20),
-                  const Icon(
+                  SizedBox(height: 20),
+                  Icon(
                     Icons.eco,
                     size: 100,
                     color: Colors.green,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // App Name
-                  const Text(
+                   Text(
                     'Potato Disease Detector',
                     style: TextStyle(
                       fontSize: 24,
@@ -41,10 +41,10 @@ class AboutAppPage extends StatelessWidget {
                       color: Colors.green,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                   SizedBox(height: 10),
 
                   // App Description
-                  const Text(
+                   Text(
                     'Potato Disease Detector is a mobile application designed to help farmers and gardeners identify common diseases affecting potato plants. Using advanced machine learning models, the app can detect diseases like Early Blight and Late Blight from images of potato leaves.',
                     style: TextStyle(
                       fontSize: 16,
@@ -52,10 +52,10 @@ class AboutAppPage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                   SizedBox(height: 20),
 
                   // Version Information
-                  const Text(
+                   Text(
                     'Version: 1.0.0',
                     style: TextStyle(
                       fontSize: 16,
