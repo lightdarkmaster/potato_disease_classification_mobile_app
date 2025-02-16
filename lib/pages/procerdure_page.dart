@@ -106,7 +106,7 @@ class AnalyticsWidget extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '4. Upload potato image file',
+                          '4. Upload potato image file or capture image of potato leaf.',
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
