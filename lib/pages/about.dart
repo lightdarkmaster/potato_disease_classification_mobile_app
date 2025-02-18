@@ -33,7 +33,7 @@ class AboutAppPage extends StatelessWidget {
                   SizedBox(height: 20),
 
                   // App Name
-                   Text(
+                  Text(
                     'Potato Disease Detector',
                     style: TextStyle(
                       fontSize: 24,
@@ -41,10 +41,10 @@ class AboutAppPage extends StatelessWidget {
                       color: Colors.green,
                     ),
                   ),
-                   SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   // App Description
-                   Text(
+                  Text(
                     'Potato Disease Detector is a mobile application designed to help farmers and gardeners identify common diseases affecting potato plants. Using advanced machine learning models, the app can detect diseases like Early Blight and Late Blight from images of potato leaves.',
                     style: TextStyle(
                       fontSize: 16,
@@ -52,10 +52,10 @@ class AboutAppPage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                   SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // Version Information
-                   Text(
+                  Text(
                     'Version: 1.0.0',
                     style: TextStyle(
                       fontSize: 16,
@@ -63,7 +63,7 @@ class AboutAppPage extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
