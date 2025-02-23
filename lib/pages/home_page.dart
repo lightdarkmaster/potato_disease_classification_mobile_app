@@ -4,7 +4,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:potato_disease_classification/pages/about.dart';
 import 'package:potato_disease_classification/pages/homescreen.dart';
 import 'procerdure_page.dart';
-import 'about_dev.dart';
 import 'camera_widget.dart';
 import 'about_app.dart';
 

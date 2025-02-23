@@ -10,6 +10,7 @@ class CameraWidget extends StatefulWidget {
   const CameraWidget({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -442,7 +443,7 @@ class _HomePageState extends State<CameraWidget> {
                               ),
                               GestureDetector(
                                 onTap: () => _launchURL(
-                                    'https://learn.agrogatemasr.com/early-symposium-in-potatoes/'),
+                                    'https://learn.agrogatemasr.com/potato-late-blight-disease/'),
                                 child: const Text(
                                   "Learn More About Late Blight",
                                   style: TextStyle(
