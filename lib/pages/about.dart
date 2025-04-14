@@ -56,7 +56,7 @@ class AboutAppPage extends StatelessWidget {
 
                   // Version Information
                   Text(
-                    'Version: 1.0.0',
+                    'Version: 1.0.1',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
