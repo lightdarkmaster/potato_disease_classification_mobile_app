@@ -112,17 +112,22 @@ class _HomePageState extends State<CameraWidget> {
   }
 
   // Function to launch URLs
-  Future<void> _launchURL(String url) async {
-    debugPrint('Attempting to launch URL: $url');
-    if (await canLaunch(url)) {
-      await launch(url);
+Future<void> _launchURL(String url) async {
+  final Uri uri = Uri.parse(url);
+  debugPrint('Attempting to launch URL: $url');
+
+  if (await canLaunchUrl(uri)) {
+    final bool launched = await launchUrl(uri);
+    if (launched) {
       debugPrint('URL launched successfully');
     } else {
-      debugPrint('Could not launch $url');
-      throw 'Could not launch $url';
+      debugPrint('Failed to launch $url');
     }
+  } else {
+    debugPrint('Could not launch $url');
+    throw 'Could not launch $url';
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
