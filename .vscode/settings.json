@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/potato_disease_classification/windows/flutter"
+    "cmake.sourceDirectory": "D:/potato_disease_classification/windows/flutter",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
