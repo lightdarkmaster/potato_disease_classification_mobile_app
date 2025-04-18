@@ -136,8 +136,7 @@ class SafetyWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16), // Add space between cards
-              // Add more Card widgets here if needed
+              const SizedBox(height: 16),
             ],
           ),
         ),
